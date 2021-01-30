@@ -25,8 +25,8 @@ enum AnimEnums
 	WALKDOWN,
 #endif
 	
-	ATTACKLEFT,
-	ATTACKRIGHT,
+	WALKLEFTINVERT,
+	WALKRIGHTINVERT,
 
 	//Only in Top down
 #ifdef TOPDOWN
@@ -45,7 +45,8 @@ enum AnimTypes
 #ifndef TOPDOWN
 	IDLE = 0,
 	WALK = 2,
-	ATTACK = 4
+	WALKINVERT = 4,
+	IDLEINVERT = 6
 #endif
 };
 
@@ -79,8 +80,8 @@ private:
 
 	//Basically, any animation OTHER than moving will not have a cancel, and we'll be checking whether or not that animation is done
 	bool m_moving = false;
-	//Are you currently attacking?????
-	bool m_attacking = false;
+	//Are you currently walking upside down?????
+	bool m_movinginvert = false;
 	//Have we locked the player from moving during this animation?
 	bool m_locked = false;
 

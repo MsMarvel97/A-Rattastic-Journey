@@ -189,6 +189,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShrinkTrigger.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TestRat.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
@@ -257,6 +258,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShrinkTrigger.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TestRat.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />

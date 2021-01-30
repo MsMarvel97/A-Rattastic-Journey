@@ -53,6 +53,12 @@ void Player::InitPlayer(std::string& fileName, std::string& animationJSON, int w
 	m_animController->AddAnimation(animations["WalkLeft"].get<Animation>());
 	//WalkRight
 	m_animController->AddAnimation(animations["WalkRight"].get<Animation>());
+
+	//Walk Left Upside Down
+	m_animController->AddAnimation(animations["WalkLeftInvert"].get<Animation>());
+	//Walk Right Upside Down
+	m_animController->AddAnimation(animations["WalkRightInvert"].get<Animation>());
+
 #ifdef TOPDOWN
 	//WalkUP
 	m_animController->AddAnimation(animations["WalkUp"].get<Animation>());
@@ -92,6 +98,7 @@ void Player::Update()
 void Player::MovementUpdate()
 {
 	m_moving = false;
+	m_movinginvert = false;
 
 	if (m_hasPhysics)
 	{
@@ -165,6 +172,19 @@ void Player::MovementUpdate()
 			m_facing = RIGHT;
 			m_moving = true;
 		}
+
+		if (Input::GetKey(Key::LeftArrow))
+		{
+			m_transform->SetPositionX(m_transform->GetPositionX() - (speed * Timer::deltaTime));
+			m_facing = LEFT;
+			m_movinginvert = true;
+		}
+		if (Input::GetKey(Key::RightArrow))
+		{
+			m_transform->SetPositionX(m_transform->GetPositionX() - (speed * Timer::deltaTime));
+			m_facing = RIGHT;
+			m_movinginvert = true;
+		}
 	}
 
 	if (Input::GetKeyDown(Key::Space))
@@ -190,21 +210,21 @@ void Player::AnimationUpdate()
 		//Puts it into the WALK category
 		activeAnimation = WALK;
 	}
-	else if (m_attacking)
+	else if (m_movinginvert)
 	{
-		activeAnimation = ATTACK;
+		activeAnimation = WALKINVERT;
 
 		//Check if the attack animation is done
-		if (m_animController->GetAnimation(m_animController->GetActiveAnim()).GetAnimationDone())
+		/*if (m_animController->GetAnimation(m_animController->GetActiveAnim()).GetAnimationDone())
 		{
 			//Will auto set to idle
 			m_locked = false;
-			m_attacking = false;
+			m_movinginvert = false;
 			//Resets the attack animation
 			m_animController->GetAnimation(m_animController->GetActiveAnim()).Reset();
 
 			activeAnimation = IDLE;
-		}
+		}*/
 	}
 	else
 	{
