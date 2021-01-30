@@ -89,7 +89,7 @@ void Trigger::SetTargetEntities(std::vector<int> entities)
 
 void Trigger::SetTargetTrigger(int trigger)
 {
-		m_targetTrigger = trigger;
+	m_targetTrigger = trigger;
 }
 
 void Trigger::SetTrueTarget(int target)
@@ -100,4 +100,19 @@ void Trigger::SetTrueTarget(int target)
 std::vector<int> Trigger::GetTargetEntities()
 {
 	return m_targetEntities;
+}
+
+//void Trigger::SetFlag(int setTrue)
+//{
+//	flag = setTrue;
+//}
+//
+//void Trigger::SetDiaNum(int setTrue)//used for dialogue trigger
+//{
+//	diaNum = setTrue;
+//}
+
+void Trigger::SetCurrentBox(int newBoxNumber)
+{
+	boxNumber = newBoxNumber;
 }

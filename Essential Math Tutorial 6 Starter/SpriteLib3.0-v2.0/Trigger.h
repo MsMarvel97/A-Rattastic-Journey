@@ -37,6 +37,8 @@ public:
 	b2Vec2 movement = (b2Vec2(0.f, 0.f));
 
 
+	void SetCurrentBox(int newBoxNumber);//used with the DestroyBox Trigger
+
 protected:
 	int m_targetTrigger = 0;
 	int m_triggerEntity;
@@ -50,5 +52,9 @@ protected:
 	std::vector<PhysicsBody> m_bodies;
 	std::vector<int> m_targetX;
 	std::vector<int> m_targetY;
+	bool check = false;
+	int flag = 0;
+	int diaNum = 0;//used for dialogue trigger
+	int boxNumber = 0;
 };
 

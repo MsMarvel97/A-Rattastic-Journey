@@ -5,5 +5,7 @@
 #include "FirstCreation.h"
 #include "PhysicsPlayground.h"
 #include "AnimationSpritePlayground.h"
+#include "MessingAround.h"
+#include "MazeLevel.h"
 
 #endif // !__SCENES_H__

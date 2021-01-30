@@ -26,6 +26,8 @@
 #include "RecheckConditions.h"
 #include "ShrinkTrigger.h"
 #include "EndTrigger.h"
+#include "TestTrigger.h"
+#include "DestroyBox.h"
 
 
 class ECS abstract
