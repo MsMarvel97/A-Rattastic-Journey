@@ -35,14 +35,13 @@ void Game::InitGame()
 
 	//Creates a new scene.
 	//Replace this with your own scene.
-	m_scenes.push_back(new FirstCreation("FIRST SCENE!!!!"));
-	m_scenes.push_back(new PhysicsPlayground("MISSION CLAMPOSSIBLE"));
-	m_scenes.push_back(new AnimationSpritePlayground("Animation TIEM!!!!"));
-	m_scenes.push_back(new MessingAround("Please Work"));
-	m_scenes.push_back(new MazeLevel("Early Retirement?"));
+	m_scenes.push_back(new MainMenu("Welcome to A Rattastic Journey!"));
+	m_scenes.push_back(new HelpMenu("Help Menu"));
+	m_scenes.push_back(new MazeLevel("A Rattastic Journey"));
+	m_scenes.push_back(new EndScreen("Thanks for playing!"));
 	 
 	//Sets active scene reference to our scene
-	m_activeScene = m_scenes[4];
+	m_activeScene = m_scenes[0];
 
 	m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
 
@@ -100,6 +99,8 @@ void Game::Update()
 
 	//Updates the active scene
 	m_activeScene->Update();
+
+	NewScene();
 }
 
 void Game::GUI()
@@ -131,6 +132,39 @@ void Game::CheckEvents()
 
 	if (m_wheel)
 		MouseWheel(BackEnd::GetWheelEvent());
+}
+
+void Game::NewScene()
+{
+		if (m_activeScene->ChangeScene() != -1)
+		{
+			m_activeScene->Unload();
+
+			MainEntities::ResetEntities();
+
+			m_activeScene = m_scenes[m_activeScene->GetNewScene()];
+			m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
+
+			m_register = m_activeScene->GetScene();
+
+			BackEnd::SetWindowName(m_activeScene->GetName());
+			PhysicsSystem::Init();
+		}
+
+		if (m_activeScene->ItemsFound() == true)
+		{
+			m_activeScene->Unload();
+
+			MainEntities::ResetEntities();
+
+			m_activeScene = m_scenes[3];
+			m_activeScene->InitScene(float(BackEnd::GetWindowWidth()), float(BackEnd::GetWindowHeight()));
+
+			m_register = m_activeScene->GetScene();
+
+			BackEnd::SetWindowName(m_activeScene->GetName());
+			PhysicsSystem::Init();
+		}
 }
 
 void Game::AcceptInput()

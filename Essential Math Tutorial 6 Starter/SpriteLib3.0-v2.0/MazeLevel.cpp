@@ -1,6 +1,5 @@
 #include "MazeLevel.h"
 #include "Utilities.h"
-
 #include <random>
 
 MazeLevel::MazeLevel(std::string name)
@@ -15,6 +14,10 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 {
 	//Dynamically allocates the register
 	m_sceneReg = new entt::registry;
+	m_physicsWorld = new b2World(m_gravity);
+	m_physicsWorld->SetContactListener(&listener);
+
+	SetSceneChange(false, -1);
 
 	//Attach the register
 	ECS::AttachRegister(m_sceneReg);
@@ -300,6 +303,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 			float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
+
 	//test trigger object 2
 	{
 		//Creates entity
@@ -902,6 +906,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 	{
 		//Creates entity
 		auto entity = ECS::CreateEntity();
+
 		//Add components
 		ECS::AttachComponent<Sprite>(entity);
 		ECS::AttachComponent<Transform>(entity);
@@ -1562,30 +1567,14 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 
 void MazeLevel::Update()
 {
-	/*auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
-	auto& canJump = ECS::GetComponent<CanJump>(MainEntities::MainPlayer());*/
-	//static int frames = 0;
-
-	/*if (canJump.m_canJump == false)
-	{
-		if (frames > 30)
-		{
-			frames++;
-		}
-		
-		if (frames == 30)
-		{
-			player.GetBody()->SetGravityScale(5.f);
-		}
-	}
-	else
-	{
-		player.GetBody()->SetGravityScale(1.f);
-		frames = 0;
-	}
-	*/
 	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
+	auto& gameState = ECS::GetComponent<LostItem>(MainEntities::MainPlayer());
 	player.Update();
+
+	if (gameState.lostItemCounter == 3)
+	{
+		Scene::SetGameOver(true);
+	}
 }
 
 void MazeLevel::KeyboardHold()
@@ -1602,12 +1591,12 @@ void MazeLevel::KeyboardHold()
 
 	if (Input::GetKey(Key::A))
 	{
-			player.SetVelocity(vec3(-5000.f * (speed * Timer::deltaTime), 0.f, 0.f));
+			player.SetVelocity(vec3(-4000.f * (speed * Timer::deltaTime), 0.f, 0.f));
 	} 
 
 	if (Input::GetKey(Key::D))
 	{
-		player.GetBody()->SetLinearVelocity(b2Vec2(5000.f * (speed*Timer::deltaTime), 0.f));
+		player.GetBody()->SetLinearVelocity(b2Vec2(4000.f * (speed*Timer::deltaTime), 0.f));
 	}
 
 	//Change physics body size for circle

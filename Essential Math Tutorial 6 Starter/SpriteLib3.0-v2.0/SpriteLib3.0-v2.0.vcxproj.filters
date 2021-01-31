@@ -222,15 +222,6 @@
     <ClInclude Include="EndTrigger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\MessingAround.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\DestroyBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\TestTrigger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MazeLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -241,6 +232,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LostItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessingAround.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestTrigger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HelpMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -443,15 +452,6 @@
     <ClCompile Include="EndTrigger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\MessingAround.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\DestroyBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\TestTrigger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MazeLevel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -462,6 +462,24 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LostItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MessingAround.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestTrigger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HelpMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EndScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

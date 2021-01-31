@@ -136,9 +136,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\DestroyBox.h" />
-    <ClInclude Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\MessingAround.h" />
-    <ClInclude Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\TestTrigger.h" />
     <ClInclude Include="AnimationController.h" />
     <ClInclude Include="AnimationSpritePlayground.h" />
     <ClInclude Include="AnimationSystem.h" />
@@ -148,9 +145,11 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="CanJump.h" />
     <ClInclude Include="CollisionFlag.h" />
+    <ClInclude Include="DestroyBox.h" />
     <ClInclude Include="DestroyTrigger.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="EffectManager.h" />
+    <ClInclude Include="EndScreen.h" />
     <ClInclude Include="EndTrigger.h" />
     <ClInclude Include="FirstCreation.h" />
     <ClInclude Include="FlaggedTrigger.h" />
@@ -160,6 +159,7 @@
     <ClInclude Include="GravitySwitch.h" />
     <ClInclude Include="GravityTrigger.h" />
     <ClInclude Include="GreyscaleEffect.h" />
+    <ClInclude Include="HelpMenu.h" />
     <ClInclude Include="HorizontalScroll.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
     <ClInclude Include="include\imgui\imgui.h" />
@@ -172,8 +172,10 @@
     <ClInclude Include="JSON.h" />
     <ClInclude Include="LostItem.h" />
     <ClInclude Include="MainEntities.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MazeLevel.h" />
+    <ClInclude Include="MessingAround.h" />
     <ClInclude Include="MoveTrigger.h" />
     <ClInclude Include="MoveTriggerOneWay.h" />
     <ClInclude Include="OtherEntities.h" />
@@ -196,6 +198,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShrinkTrigger.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TestTrigger.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Timer.h" />
@@ -213,9 +216,6 @@
     <ClInclude Include="Xinput.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\DestroyBox.cpp" />
-    <ClCompile Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\MessingAround.cpp" />
-    <ClCompile Include="..\..\..\Animal-Crossing-Cobalt-Horizons\Essential Math Tutorial 6 Starter\SpriteLib3.0-v2.0\TestTrigger.cpp" />
     <ClCompile Include="AnimationController.cpp" />
     <ClCompile Include="AnimationSpritePlayground.cpp" />
     <ClCompile Include="AnimationSystem.cpp" />
@@ -225,9 +225,11 @@
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="CanJump.cpp" />
     <ClCompile Include="CollisionFlag.cpp" />
+    <ClCompile Include="DestroyBox.cpp" />
     <ClCompile Include="DestroyTrigger.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="EffectManager.cpp" />
+    <ClCompile Include="EndScreen.cpp" />
     <ClCompile Include="EndTrigger.cpp" />
     <ClCompile Include="FirstCreation.cpp" />
     <ClCompile Include="FlaggedTrigger.cpp" />
@@ -237,6 +239,7 @@
     <ClCompile Include="GravitySwitch.cpp" />
     <ClCompile Include="GravityTrigger.cpp" />
     <ClCompile Include="GreyscaleEffect.cpp" />
+    <ClCompile Include="HelpMenu.cpp" />
     <ClCompile Include="HorizontalScroll.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
     <ClCompile Include="include\imgui\imgui_demo.cpp" />
@@ -248,8 +251,10 @@
     <ClCompile Include="LostItem.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainEntities.cpp" />
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MazeLevel.cpp" />
+    <ClCompile Include="MessingAround.cpp" />
     <ClCompile Include="MoveTrigger.cpp" />
     <ClCompile Include="MoveTriggerOneWay.cpp" />
     <ClCompile Include="OtherEntities.cpp" />
@@ -271,6 +276,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShrinkTrigger.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TestTrigger.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Timer.cpp" />

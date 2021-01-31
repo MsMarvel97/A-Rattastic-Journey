@@ -40,6 +40,19 @@ public:
 	virtual void KeyboardDown() { };
 	virtual void KeyboardUp() { };
 
+	//checks conditions for scene change
+	int ChangeScene();
+	void SetSceneChange(bool next, int newScene);
+
+	int GetNewScene();
+	void SetSwap(bool sceneSwap);
+
+	void SetGameOver(bool finished);
+
+	void SetFlag(bool flag, int item);
+	//flags item found for game loop
+	bool ItemsFound();
+
 	//Mouse Input
 	//Because these are virtual you can override them in your inherited classes.
 	//The same way you do for Update().
@@ -70,9 +83,18 @@ public:
 
 	//Set window size (makes sure the camera aspect is proper)
 	void SetWindowSize(float windowWidth, float windowHeight);
+
 protected:
 	b2World* m_physicsWorld = nullptr;
 	b2Vec2 m_gravity = b2Vec2(float32(0.f), float32(0.f));
+
+	bool swap = false;
+	int sceneSwap = 0;
+
+	bool itemFlag = false;
+	int itemID = 0;
+
+	bool gameOver = false;
 
 	vec4 m_clearColor = vec4(0.15f, 0.33f, 0.58f, 1.f);
 

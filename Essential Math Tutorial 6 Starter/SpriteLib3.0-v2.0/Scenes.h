@@ -7,5 +7,8 @@
 #include "AnimationSpritePlayground.h"
 #include "MessingAround.h"
 #include "MazeLevel.h"
+#include "MainMenu.h"
+#include "HelpMenu.h"
+#include "EndScreen.h"
 
 #endif // !__SCENES_H__

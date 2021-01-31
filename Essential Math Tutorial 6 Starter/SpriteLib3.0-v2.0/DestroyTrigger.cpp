@@ -33,12 +33,13 @@ void DestroyTrigger::OnEnter()
 		}
 		triggered = true;
 	}
+	auto& mainPlayer = ECS::GetComponent<LostItem>(MainEntities::MainPlayer());
+	mainPlayer.lostItemCounter++;
+	std::cout << mainPlayer.lostItemCounter << std::endl;
 	
 }
 
 void DestroyTrigger::OnExit()
 {
 	Trigger::OnExit();	
-	auto& mainPlayer = ECS::GetComponent<LostItem>(MainEntities::MainPlayer());
-	mainPlayer.lostItemCounter++;
 }
