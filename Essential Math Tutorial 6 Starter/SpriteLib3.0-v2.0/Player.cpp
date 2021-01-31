@@ -40,6 +40,10 @@ void Player::InitPlayer(std::string& fileName, std::string& animationJSON, int w
 	m_animController->AddAnimation(animations["IdleLeft"].get<Animation>());
 	//Idle Right
 	m_animController->AddAnimation(animations["IdleRight"].get<Animation>());
+	//Idle Left Invert
+	m_animController->AddAnimation(animations["IdleLeftInvert"].get<Animation>());
+	//Idle Right Invert
+	m_animController->AddAnimation(animations["IdleRightInvert"].get<Animation>());
 #ifdef TOPDOWN
 	//Idle Up
 	m_animController->AddAnimation(animations["IdleUp"].get<Animation>());
@@ -53,6 +57,10 @@ void Player::InitPlayer(std::string& fileName, std::string& animationJSON, int w
 	m_animController->AddAnimation(animations["WalkLeft"].get<Animation>());
 	//WalkRight
 	m_animController->AddAnimation(animations["WalkRight"].get<Animation>());
+	//WalkLeftInvert
+	m_animController->AddAnimation(animations["WalkLeftInvert"].get<Animation>());
+	//WalkRightInvert
+	m_animController->AddAnimation(animations["WalkRightInvert"].get<Animation>());
 #ifdef TOPDOWN
 	//WalkUP
 	m_animController->AddAnimation(animations["WalkUp"].get<Animation>());
@@ -185,30 +193,23 @@ void Player::AnimationUpdate()
 {
 	int activeAnimation = 0;
 
-	if (m_moving)
+	if (m_moving && !m_movingInverse)
 	{
 		//Puts it into the WALK category
 		activeAnimation = WALK;
 	}
-	else if (m_attacking)
+	else if (m_moving && m_movingInverse)
 	{
-		activeAnimation = ATTACK;
-
-		//Check if the attack animation is done
-		if (m_animController->GetAnimation(m_animController->GetActiveAnim()).GetAnimationDone())
-		{
-			//Will auto set to idle
-			m_locked = false;
-			m_attacking = false;
-			//Resets the attack animation
-			m_animController->GetAnimation(m_animController->GetActiveAnim()).Reset();
-
-			activeAnimation = IDLE;
-		}
+		activeAnimation = WALKINVERT;
 	}
-	else
+
+	if(!m_moving && !m_movingInverse)
 	{
 		activeAnimation = IDLE;
+	}
+	else if (!m_moving && m_movingInverse)
+	{
+		activeAnimation = IDLEINVERT;
 	}
 
 	SetActiveAnimation(activeAnimation + (int)m_facing);

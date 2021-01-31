@@ -18,6 +18,8 @@ public:
 	void KeyboardUp() override;
 
 	bool flipped = false; //used to determine how space bar works
+
+	int lostItemsCounter = 0;
 protected:
 	PhysicsPlaygroundListener listener;
 

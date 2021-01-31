@@ -30,6 +30,7 @@
 #include "DestroyBox.h"
 #include "GravityTrigger.h"
 #include "GravitySwitch.h"
+#include "LostItem.h"
 
 
 class ECS abstract

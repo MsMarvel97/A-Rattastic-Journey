@@ -55,23 +55,28 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<CanJump>(entity);
 		ECS::AttachComponent<DestroyBox>(entity);
 		ECS::AttachComponent<GravitySwitch>(entity);
-
+		ECS::AttachComponent<Player>(entity);
+		ECS::AttachComponent<AnimationController>(entity);
+		ECS::AttachComponent<LostItem>(entity);
+		
 		//Set up components
-		std::string fileName = "testRat.png";
-		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 30, 15);
-		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		std::string fileName = "spritesheets/ratspritesheet.png";
+		std::string animations = "rat.json";
+
+		ECS::GetComponent<Player>(entity).InitPlayer(fileName, animations, 30, 30, &ECS::GetComponent<Sprite>(entity),
+			&ECS::GetComponent<AnimationController>(entity), &ECS::GetComponent<Transform>(entity));
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, 30.f, 2.f));
 
 		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
 		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
 
-		float shrinkX = 0.f;
-		float shrinkY = 0.f;
+		float shrinkX = 6.f;
+		float shrinkY = 17.f;
 
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_dynamicBody;
-		tempDef.position.Set(float32(1000.f), float32(220.f));
+		tempDef.position.Set(float32(0.f), float32(10.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, PLAYER, ENEMY | OBJECTS | PICKUP | TRIGGER, 1.f, 3.f);
@@ -93,10 +98,42 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 
 		//Set up components
 		std::string fileName = "background.png";
-		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 6000/3, 1500/3);
-		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, 200.f, 1.f));
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 6000*0.9, 1000*0.9);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(600.f, 150.f, 1.f));
 	}
 
+	//Map Left Limit
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "platform.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 380);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(-600.f), float32(150.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX),
+			float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
+		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+	}
 	//ground # 1
 	{
 		//Creates entity
@@ -107,7 +144,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "frontcounter.png";
+		std::string fileName = "ground.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, (1208) + 5, 219 / 6);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -139,7 +176,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "frontcounter.png";
+		std::string fileName = "ground.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, (1208) + 5, 219 / 6);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(0.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -172,7 +209,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "barricade.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 10, 80);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -227,7 +264,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
-		tempPhsBody = PhysicsBody(entity, tempBody, float(10.f - shrinkX), float(10.f - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
+		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
 
@@ -242,7 +279,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "barricade.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 10, 80);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -276,7 +313,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 
 		//Sets up components
 		std::string fileName = "wood.png";
-		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 10, 80);
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 80);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(10.f, 10.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(0.f);
 		ECS::GetComponent<Trigger*>(entity) = new TestTrigger();
@@ -296,7 +333,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
-		tempPhsBody = PhysicsBody(entity, tempBody, float(10.f - shrinkX), float(10.f - shrinkY), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
+		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
 
@@ -314,7 +351,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 180);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -347,7 +384,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 80);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -379,7 +416,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -412,7 +449,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -445,7 +482,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -478,7 +515,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -510,7 +547,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 80);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -543,7 +580,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 280);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -575,7 +612,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 190);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -607,7 +644,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 300);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -640,7 +677,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 80);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -672,7 +709,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 100);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -705,7 +742,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 150);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -739,7 +776,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 80);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -771,7 +808,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 80);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -803,7 +840,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 350);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -838,7 +875,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 850);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -871,7 +908,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -884,7 +921,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(700.f), float32(40.f));
+		tempDef.position.Set(float32(700.f), float32(20.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -904,7 +941,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -917,7 +954,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(800.f), float32(80.f));
+		tempDef.position.Set(float32(800.f), float32(60.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -937,7 +974,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -950,7 +987,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(660.f), float32(130.f));
+		tempDef.position.Set(float32(680.f), float32(90.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -970,7 +1007,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -983,7 +1020,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(800.f), float32(180.f));
+		tempDef.position.Set(float32(800.f), float32(160.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -1003,7 +1040,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1016,7 +1053,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(660.f), float32(230.f));
+		tempDef.position.Set(float32(660.f), float32(210.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -1036,7 +1073,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 430);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1058,7 +1095,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
 
-	//Gravity Button
+	//Gravity Button #-1
 	{
 		//Creates entity
 		auto entity = ECS::CreateEntity();
@@ -1070,7 +1107,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Trigger*>(entity);
 
 		//Sets up components
-		std::string fileName = "wood.png";
+		std::string fileName = "button.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(10.f, 10.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1087,7 +1124,44 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(660.f), float32(250.f));
+		tempDef.position.Set(float32(660.f), float32(420.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
+		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+		tempPhsBody.SetRotationAngleDeg(180);
+	}
+	//Gravity Button 
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+
+		//Sets up components
+		std::string fileName = "button.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(10.f, 10.f, 3.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		ECS::GetComponent<Trigger*>(entity) = new GravityTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetGravityTriggerFlag(true);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(660.f), float32(220.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -1095,7 +1169,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
 
-	//column 2
+	//column 2 and map left limit
 	{
 		//Creates entity
 		auto entity = ECS::CreateEntity();
@@ -1105,8 +1179,8 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
-		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 430);
+		std::string fileName = "platform.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 450);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
 
@@ -1118,7 +1192,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		b2Body* tempBody;
 		b2BodyDef tempDef;
 		tempDef.type = b2_staticBody;
-		tempDef.position.Set(float32(1250.f), float32(180.f));
+		tempDef.position.Set(float32(1250.f), float32(200.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
 
@@ -1139,7 +1213,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Trigger*>(entity);
 
 		//Sets up components
-		std::string fileName = "wood.png";
+		std::string fileName = "button.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(10.f, 10.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1162,6 +1236,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 
 		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+		tempPhsBody.SetRotationAngleDeg(180);
 	}
 
 	//Gravity Button #3
@@ -1176,7 +1251,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Trigger*>(entity);
 
 		//Sets up components
-		std::string fileName = "wood.png";
+		std::string fileName = "button.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(10.f, 10.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1199,6 +1274,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 
 		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+		tempPhsBody.SetRotationAngleDeg(180);
 	}
 
 	//Gravity Button #4
@@ -1213,7 +1289,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<Trigger*>(entity);
 
 		//Sets up components
-		std::string fileName = "wood.png";
+		std::string fileName = "button.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(10.f, 10.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1248,7 +1324,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1282,7 +1358,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1315,7 +1391,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 60);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1349,7 +1425,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		ECS::AttachComponent<PhysicsBody>(entity);
 
 		//Sets up components
-		std::string fileName = "steel.png";
+		std::string fileName = "platform.png";
 		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 100);
 		ECS::GetComponent<Transform>(entity).SetPosition(vec3(500.f, -40.f, 3.f));
 		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
@@ -1370,6 +1446,112 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 			float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, GROUND, PLAYER | ENEMY);
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 		tempPhsBody.SetRotationAngleDeg(90.f);
+	}
+
+	//Lost Items//
+	
+	//Scissors
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+
+		//Sets up components
+		std::string fileName = "scissors.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 35, 35);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(275.f, 174.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DestroyTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(entity);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(275.f), float32(174.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
+		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+		
+	}
+
+	//Glasses
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+		
+
+		//Sets up components
+		std::string fileName = "glasses.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 45, 15);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(796.f, 80.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DestroyTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(entity);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(796.f), float32(80.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
+		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+	}
+
+	//Bowtie
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+
+		//Sets up components
+		std::string fileName = "bowtie.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 35, 22);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(885.f, 278.f, 3.f));
+		ECS::GetComponent<Trigger*>(entity) = new DestroyTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(entity);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(885.f), float32(278.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
+		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
 
 	ECS::GetComponent<HorizontalScroll>(MainEntities::MainCamera()).SetFocus(&ECS::GetComponent<Transform>(MainEntities::MainPlayer()));
@@ -1402,6 +1584,8 @@ void MazeLevel::Update()
 		frames = 0;
 	}
 	*/
+	auto& player = ECS::GetComponent<Player>(MainEntities::MainPlayer());
+	player.Update();
 }
 
 void MazeLevel::KeyboardHold()
@@ -1416,12 +1600,12 @@ void MazeLevel::KeyboardHold()
 		speed *= 5.f;
 	}
 
-	if (Input::GetKey(Key::A) && canJump.m_canJump)
+	if (Input::GetKey(Key::A))
 	{
 			player.SetVelocity(vec3(-5000.f * (speed * Timer::deltaTime), 0.f, 0.f));
 	} 
 
-	if (Input::GetKey(Key::D) && canJump.m_canJump)
+	if (Input::GetKey(Key::D))
 	{
 		player.GetBody()->SetLinearVelocity(b2Vec2(5000.f * (speed*Timer::deltaTime), 0.f));
 	}
@@ -1443,7 +1627,8 @@ void MazeLevel::KeyboardDown()
 	auto& canJump = ECS::GetComponent<CanJump>(MainEntities::MainPlayer());
 	auto& boxCheck = ECS::GetComponent<DestroyBox>(MainEntities::MainPlayer());
 	auto& changeGravity = ECS::GetComponent<GravitySwitch>(MainEntities::MainPlayer());
-
+	auto& playerDude = ECS::GetComponent<Player>(MainEntities::MainPlayer());
+	
 
 	if (Input::GetKeyDown(Key::T))
 	{
@@ -1455,12 +1640,12 @@ void MazeLevel::KeyboardDown()
 		{
 			if (flipped == false)
 			{
-			player.GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0.f, 160000.f), true);
+			player.GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0.f, 500000.f), true);
 			canJump.m_canJump = false;
 			}
 			else if (flipped == true)
 			{
-				player.GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0.f, -160000.f), true);
+				player.GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0.f, -500000.f), true);
 				canJump.m_canJump = false;
 			}
 
@@ -1497,19 +1682,34 @@ void MazeLevel::KeyboardDown()
 
 	}
 
-	if (Input::GetKeyDown(Key::Enter) && changeGravity.GetGravityFlag() == true)
+	if (Input::GetKeyDown(Key::E) && changeGravity.GetGravityFlag() == true)
 	{
+
 		m_gravity *= -1.f;
 		m_physicsWorld->SetGravity(m_gravity);
 		if (flipped == true)
 		{
 			flipped = false;
+			playerDude.m_movingInverse = false;
 		}
 		else
 		{
 			flipped = true;
+			playerDude.m_movingInverse = true;
 		}
 	}
+
+	//for debugging
+	if (Input::GetKeyDown(Key::L))
+	{
+		std::cout << "(" << player.GetPosition().x << "," << player.GetPosition().y << ")" << "\n";
+	}
+
+	if (Input::GetKeyDown(Key::I))
+	{
+		auto& mainPlayer = ECS::GetComponent<LostItem>(MainEntities::MainPlayer());
+		std::cout << mainPlayer.lostItemCounter << "\n";
+	}	
 }
 
 void MazeLevel::KeyboardUp()

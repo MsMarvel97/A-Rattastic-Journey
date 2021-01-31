@@ -27,7 +27,7 @@ void DestroyTrigger::OnEnter()
 			PhysicsBody::m_bodiesToDelete.push_back(m_targetEntities[i]);
 			if (PhysicsBody::m_bodiesToDelete.size() > 0)
 			{
-				std::cout << "It works!";
+				//std::cout << "It works!";
 			}
 			m_targetEntities.clear();
 		}
@@ -39,4 +39,6 @@ void DestroyTrigger::OnEnter()
 void DestroyTrigger::OnExit()
 {
 	Trigger::OnExit();	
+	auto& mainPlayer = ECS::GetComponent<LostItem>(MainEntities::MainPlayer());
+	mainPlayer.lostItemCounter++;
 }

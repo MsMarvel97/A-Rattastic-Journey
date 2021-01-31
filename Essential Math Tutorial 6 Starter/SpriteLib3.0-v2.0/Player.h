@@ -7,17 +7,22 @@
 
 enum AnimEnums
 {
-	IDLELEFT,
-	IDLERIGHT,
-	
+	IDLELEFT, //0
+	IDLERIGHT,//1
+	IDLELEFTINVERT,//2
+	IDLERIGHTINVERT,//3
+
 	//Only in Top down
 #ifdef TOPDOWN
 	IDLEUP,
 	IDLEDOWN,
 #endif
 
-	WALKLEFT,
-	WALKRIGHT,
+	WALKLEFT,//4
+	WALKRIGHT,//5
+	WALKLEFTINVERT,//6
+	WALKRIGHTINVERT,//7
+
 
 	//Only in Top down
 #ifdef TOPDOWN
@@ -44,8 +49,9 @@ enum AnimTypes
 #endif
 #ifndef TOPDOWN
 	IDLE = 0,
-	WALK = 2,
-	ATTACK = 4
+	WALK = 4,
+	WALKINVERT = 6,
+	IDLEINVERT = 2,
 #endif
 };
 
@@ -69,6 +75,8 @@ public:
 
 	void InitPlayer(std::string& fileName, std::string& animationJSON, int width, int height, 
 		Sprite* sprite, AnimationController* controller, Transform* transform, bool hasPhys = false, PhysicsBody* body = nullptr);
+
+	bool m_movingInverse = false;
 
 	void Update();
 	void MovementUpdate();
