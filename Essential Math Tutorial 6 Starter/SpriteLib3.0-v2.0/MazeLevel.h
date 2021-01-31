@@ -17,6 +17,7 @@ public:
 	void KeyboardDown() override;
 	void KeyboardUp() override;
 
+	bool flipped = false; //used to determine how space bar works
 protected:
 	PhysicsPlaygroundListener listener;
 
@@ -26,6 +27,5 @@ protected:
 	//Box entities
 	int theBoxOne;
 	int theBoxTwo;
-	int theBoxThree;
 };
 

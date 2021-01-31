@@ -38,6 +38,7 @@ public:
 
 
 	void SetCurrentBox(int newBoxNumber);//used with the DestroyBox Trigger
+	void SetGravityTriggerFlag(bool newFlag);
 
 protected:
 	int m_targetTrigger = 0;
@@ -56,5 +57,6 @@ protected:
 	int flag = 0;
 	int diaNum = 0;//used for dialogue trigger
 	int boxNumber = 0;
+	bool gravityTriggerFlag = false;
 };
 

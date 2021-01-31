@@ -234,6 +234,12 @@
     <ClInclude Include="MazeLevel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GravityTrigger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GravitySwitch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\imgui\imgui.cpp">
@@ -444,6 +450,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MazeLevel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityTrigger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GravitySwitch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

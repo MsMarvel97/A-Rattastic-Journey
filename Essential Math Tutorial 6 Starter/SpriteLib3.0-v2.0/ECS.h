@@ -28,6 +28,8 @@
 #include "EndTrigger.h"
 #include "TestTrigger.h"
 #include "DestroyBox.h"
+#include "GravityTrigger.h"
+#include "GravitySwitch.h"
 
 
 class ECS abstract

@@ -116,3 +116,8 @@ void Trigger::SetCurrentBox(int newBoxNumber)
 {
 	boxNumber = newBoxNumber;
 }
+
+void Trigger::SetGravityTriggerFlag(bool newFlag)
+{
+	gravityTriggerFlag = newFlag;
+}
