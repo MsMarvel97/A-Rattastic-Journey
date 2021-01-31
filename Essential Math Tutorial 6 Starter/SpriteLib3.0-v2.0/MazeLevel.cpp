@@ -6,7 +6,7 @@
 MazeLevel::MazeLevel(std::string name)
 	: Scene(name)
 {
-	m_gravity = b2Vec2(0.f, -78.f);
+	m_gravity = b2Vec2(0.f, -98.f);
 	m_physicsWorld->SetGravity(m_gravity);
 	m_physicsWorld->SetContactListener(&listener);
 }
@@ -74,7 +74,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		tempDef.position.Set(float32(1000.f), float32(220.f));
 
 		tempBody = m_physicsWorld->CreateBody(&tempDef);
-		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, PLAYER, ENEMY | OBJECTS | PICKUP | TRIGGER, 0.5f, 3.f);
+		tempPhsBody = PhysicsBody(entity, tempBody, float(tempSpr.GetWidth() - shrinkX), float(tempSpr.GetHeight() - shrinkY), vec2(0.f, 0.f), false, PLAYER, ENEMY | OBJECTS | PICKUP | TRIGGER, 1.f, 3.f);
 
 		tempPhsBody.SetRotationAngleDeg(0.f);
 		tempPhsBody.SetFixedRotation(true);
@@ -307,6 +307,7 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 	{
 		//Creates entity
 		auto entity = ECS::CreateEntity();
+
 		//Add components
 		ECS::AttachComponent<Sprite>(entity);
 		ECS::AttachComponent<Transform>(entity);
@@ -1163,6 +1164,80 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
 	}
 
+	//Gravity Button #3
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+
+		//Sets up components
+		std::string fileName = "wood.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(10.f, 10.f, 3.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		ECS::GetComponent<Trigger*>(entity) = new GravityTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetGravityTriggerFlag(true);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(922.f), float32(280.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
+		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+	}
+
+	//Gravity Button #4
+	{
+		//Creates entity
+		auto entity = ECS::CreateEntity();
+
+		//Add components
+		ECS::AttachComponent<Sprite>(entity);
+		ECS::AttachComponent<Transform>(entity);
+		ECS::AttachComponent<PhysicsBody>(entity);
+		ECS::AttachComponent<Trigger*>(entity);
+
+		//Sets up components
+		std::string fileName = "wood.png";
+		ECS::GetComponent<Sprite>(entity).LoadSprite(fileName, 20, 20);
+		ECS::GetComponent<Transform>(entity).SetPosition(vec3(10.f, 10.f, 3.f));
+		ECS::GetComponent<Sprite>(entity).SetTransparency(1.f);
+		ECS::GetComponent<Trigger*>(entity) = new GravityTrigger();
+		ECS::GetComponent<Trigger*>(entity)->SetTriggerEntity(entity);
+		ECS::GetComponent<Trigger*>(entity)->AddTargetEntity(player);
+		ECS::GetComponent<Trigger*>(entity)->SetGravityTriggerFlag(true);
+
+		auto& tempSpr = ECS::GetComponent<Sprite>(entity);
+		auto& tempPhsBody = ECS::GetComponent<PhysicsBody>(entity);
+
+		float shrinkX = 0.f;
+		float shrinkY = 0.f;
+		b2Body* tempBody;
+		b2BodyDef tempDef;
+		tempDef.type = b2_staticBody;
+		tempDef.position.Set(float32(870.f), float32(-12.f));
+
+		tempBody = m_physicsWorld->CreateBody(&tempDef);
+
+		tempPhsBody = PhysicsBody(entity, tempBody, tempSpr.GetWidth(), tempSpr.GetHeight(), vec2(0.f, 0.f), true, TRIGGER, PLAYER);
+		tempPhsBody.SetColor(vec4(0.f, 1.f, 0.f, 0.3f));
+	}
+
 	//S2P1
 	{
 		//Creates entity
@@ -1305,13 +1380,34 @@ void MazeLevel::InitScene(float windowWidth, float windowHeight)
 
 void MazeLevel::Update()
 {
+	/*auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
+	auto& canJump = ECS::GetComponent<CanJump>(MainEntities::MainPlayer());*/
+	//static int frames = 0;
 
+	/*if (canJump.m_canJump == false)
+	{
+		if (frames > 30)
+		{
+			frames++;
+		}
+		
+		if (frames == 30)
+		{
+			player.GetBody()->SetGravityScale(5.f);
+		}
+	}
+	else
+	{
+		player.GetBody()->SetGravityScale(1.f);
+		frames = 0;
+	}
+	*/
 }
 
 void MazeLevel::KeyboardHold()
 {
 	auto& player = ECS::GetComponent<PhysicsBody>(MainEntities::MainPlayer());
-
+	auto& canJump = ECS::GetComponent<CanJump>(MainEntities::MainPlayer());
 	float speed = 1.f;
 	b2Vec2 vel = b2Vec2(0.f, 0.f);
 
@@ -1320,13 +1416,14 @@ void MazeLevel::KeyboardHold()
 		speed *= 5.f;
 	}
 
-	if (Input::GetKey(Key::A))
+	if (Input::GetKey(Key::A) && canJump.m_canJump)
 	{
-		player.GetBody()->SetLinearVelocity(b2Vec2(-10000.f * (speed*Timer::deltaTime), 0.f));
+			player.SetVelocity(vec3(-5000.f * (speed * Timer::deltaTime), 0.f, 0.f));
 	} 
-	if (Input::GetKey(Key::D))
+
+	if (Input::GetKey(Key::D) && canJump.m_canJump)
 	{
-		player.GetBody()->SetLinearVelocity(b2Vec2(10000.f * (speed*Timer::deltaTime), 0.f));
+		player.GetBody()->SetLinearVelocity(b2Vec2(5000.f * (speed*Timer::deltaTime), 0.f));
 	}
 
 	//Change physics body size for circle
@@ -1346,6 +1443,7 @@ void MazeLevel::KeyboardDown()
 	auto& canJump = ECS::GetComponent<CanJump>(MainEntities::MainPlayer());
 	auto& boxCheck = ECS::GetComponent<DestroyBox>(MainEntities::MainPlayer());
 	auto& changeGravity = ECS::GetComponent<GravitySwitch>(MainEntities::MainPlayer());
+
 
 	if (Input::GetKeyDown(Key::T))
 	{
